@@ -307,11 +307,11 @@ export default function Home() {
                 <input
                   type="text"
                   placeholder="Search for your favorite salad..."
-                  className="input input-bordered w-full pl-10 focus:input-success bg-white shadow-sm"
+                  className="input input-bordered w-full pl-10 focus:input-primary bg-green-50 shadow-md text-green-800 placeholder-green-400"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <FaSearch className="absolute left-3 top-3 text-green-600" />
+                <FaSearch className="absolute left-3 top-3 text-green-500" />
               </div>
             </div>
 
