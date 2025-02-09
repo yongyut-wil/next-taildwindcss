@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 import {
   FaShoppingCart,
   FaLeaf,
   FaSearch,
-  FaHome,
-  FaFilter,
+  FaHome
 } from "react-icons/fa";
 import { GiWheat } from "react-icons/gi";
 import {
@@ -17,15 +17,33 @@ import {
 import CartModal from "@/components/CartModal";
 import { Salad } from "@/types/salad";
 
+interface CartItem {
+  salad: Salad;
+  quantity: number;
+}
+
 export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [cart, setCart] = useState<{ id: number; quantity: number }[]>([]);
+  const [cart, setCart] = useState<CartItem[]>([]);
   const [filterVegetarian, setFilterVegetarian] = useState(false);
   const [filterGlutenFree, setFilterGlutenFree] = useState(false);
   const [sortBy, setSortBy] = useState<"price" | "rating" | "name">("name");
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
+
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    const savedCart = localStorage.getItem("cart");
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+  }, []);
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   const salads: Salad[] = [
     {
@@ -122,32 +140,47 @@ export default function Home() {
   ];
 
   const addToCart = (saladIndex: number) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === saladIndex);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === saladIndex
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { id: saladIndex, quantity: 1 }];
-    });
-  };
-
-  const updateCartQuantity = (id: number, quantity: number) => {
-    setCart((prev) => {
-      if (quantity === 0) {
-        return prev.filter((item) => item.id !== id);
-      }
-      return prev.map((item) =>
-        item.id === id ? { ...item, quantity } : item
+    setCart((prevCart) => {
+      const existingItemIndex = prevCart.findIndex(
+        (item) => item.salad.name === salads[saladIndex].name
       );
+
+      if (existingItemIndex >= 0) {
+        // Item exists, update quantity
+        const newCart = [...prevCart];
+        newCart[existingItemIndex].quantity += 1;
+        return newCart;
+      } else {
+        // Add new item
+        return [...prevCart, { salad: salads[saladIndex], quantity: 1 }];
+      }
+    });
+
+    // Show a toast notification
+    const toast = document.getElementById("toast") as HTMLDivElement;
+    if (toast) {
+      toast.classList.remove("hidden");
+      setTimeout(() => {
+        toast.classList.add("hidden");
+      }, 2000);
+    }
+  };
+
+  const updateQuantity = (index: number, newQuantity: number) => {
+    if (newQuantity < 1) {
+      removeFromCart(index);
+      return;
+    }
+
+    setCart((prevCart) => {
+      const newCart = [...prevCart];
+      newCart[index].quantity = newQuantity;
+      return newCart;
     });
   };
 
-  const removeFromCart = (id: number) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+  const removeFromCart = (index: number) => {
+    setCart((prevCart) => prevCart.filter((_, i) => i !== index));
   };
 
   const filteredSalads = salads
@@ -283,7 +316,7 @@ export default function Home() {
 
           {/* Daily Special */}
           <div className="mb-8">
-            <h2 className="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wider">Today's Special</h2>
+            <h2 className="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wider">Today&apos;s Special</h2>
             <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-12 h-12 rounded-full bg-white p-2 flex items-center justify-center">
@@ -305,11 +338,10 @@ export default function Home() {
             <h2 className="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wider">Health Tip of the Day</h2>
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
               <p className="text-sm text-blue-700 italic">
-                "Adding colorful vegetables to your salad increases its antioxidant properties and nutritional value."
+                &ldquo;Adding colorful vegetables to your salad increases its antioxidant properties and nutritional value.&rdquo;
               </p>
             </div>
           </div>
-
         </aside>
       </div>
 
@@ -359,7 +391,7 @@ export default function Home() {
                 <div className="indicator">
                   <FaShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
                   {cart.length > 0 && (
-                    <span className="badge badge-xs sm:badge-sm indicator-item bg-yellow-400 text-black border-none">
+                    <span className="badge badge-xs sm:badge-sm bg-yellow-400 text-black border-none">
                       {cart.reduce((total, item) => total + item.quantity, 0)}
                     </span>
                   )}
@@ -418,9 +450,11 @@ export default function Home() {
                   className="card bg-white shadow-lg hover:shadow-xl transition-all duration-300 group"
                 >
                   <figure className="relative overflow-hidden">
-                    <img
+                    <Image
                       src={salad.image}
                       alt={salad.name}
+                      width={800}
+                      height={600}
                       className="w-full h-48 sm:h-56 lg:h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-1 sm:gap-2 flex-col sm:flex-row">
@@ -550,13 +584,22 @@ export default function Home() {
         </footer>
       </div>
 
+      {/* Toast Notification */}
+      <div
+        id="toast"
+        className="hidden toast toast-top toast-end z-50"
+      >
+        <div className="alert alert-success">
+          <span>Item added to cart!</span>
+        </div>
+      </div>
+
       <CartModal
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         cart={cart}
-        salads={salads}
-        onUpdateQuantity={updateCartQuantity}
-        onRemoveItem={removeFromCart}
+        updateQuantity={updateQuantity}
+        removeFromCart={removeFromCart}
       />
     </div>
   );

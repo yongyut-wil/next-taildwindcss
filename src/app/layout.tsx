@@ -1,50 +1,51 @@
-import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
-import "./globals.css";
+import type { Metadata } from 'next';
+import { Poppins } from 'next/font/google';
+import './globals.css';
 
 const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-poppins",
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-poppins',
 });
 
 export const metadata: Metadata = {
-  title: "Salad Factory - Fresh & Healthy Salads",
-  description: "Discover our fresh, healthy, and delicious salads at Salad Factory. Order your perfect salad today with customizable ingredients and dietary options.",
-  keywords: "salad, healthy food, fresh salads, vegetarian, gluten-free, healthy eating, food delivery",
-  authors: [{ name: "Salad Factory" }],
-  themeColor: "#16a34a", // green-600
-  icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
-  },
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
-  robots: "index, follow",
+  title: 'Salad Factory - Fresh & Healthy Salads',
+  description: 'Discover our handcrafted salads made with fresh, locally-sourced ingredients. Order online for delivery or pickup.',
+  keywords: 'salad, healthy food, fresh ingredients, vegetarian, gluten-free, online ordering',
+  authors: [{ name: 'Salad Factory Team' }],
   openGraph: {
-    type: "website",
-    title: "Salad Factory - Fresh & Healthy Salads",
-    description: "Fresh, healthy, and delicious salads delivered to you.",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Salad Factory Preview",
-      },
-    ],
+    title: 'Salad Factory - Fresh & Healthy Salads',
+    description: 'Discover our handcrafted salads made with fresh, locally-sourced ingredients.',
+    images: ['/og-image.jpg'],
+    url: 'https://saladfactory.com',
+    siteName: 'Salad Factory',
+    type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Salad Factory - Fresh & Healthy Salads',
+    description: 'Discover our handcrafted salads made with fresh, locally-sourced ingredients.',
+    images: ['/twitter-image.jpg'],
+  },
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
+  themeColor: '#22C55E', // Green-500
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body
-        className={`${poppins.variable} font-sans antialiased bg-gray-50 min-h-screen flex flex-col`}
-      >
+    <html lang="en" data-theme="light" className={`${poppins.variable}`}>
+      <head>
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+      </head>
+      <body className="min-h-screen bg-gray-50 font-sans antialiased">
         {children}
       </body>
     </html>
