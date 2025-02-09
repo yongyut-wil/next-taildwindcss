@@ -56,6 +56,30 @@ Then, open [http://localhost:3000](http://localhost:3000) in your browser to see
 - [React Icons](https://react-icons.github.io/react-icons/) - ไอคอนยอดนิยมสำหรับโปรเจกต์ React
 - [DaisyUI](https://daisyui.com/) - ชุดคอมโพเนนต์สำเร็จรูปสำหรับ Tailwind CSS
 
+## Screenshots
+
+Here's a preview of our beautiful salad ordering website:
+
+![Salad Factory Homepage](./images/homepage.png)
+*Homepage with featured salads and customization options*
+
+![Mobile View](./images/mobile.png)
+*Responsive mobile design for on-the-go ordering*
+
+![Cart Modal](./images/cart.png)
+*Easy-to-use shopping cart with order summary*
+
+ภาพตัวอย่างเว็บไซต์:
+
+![หน้าแรก Salad Factory](./images/homepage.png)
+*หน้าแรกแสดงเมนูสลัดยอดนิยมและตัวเลือกการปรับแต่ง*
+
+![มุมมองบนมือถือ](./images/mobile.png)
+*ดีไซน์ที่ปรับให้เหมาะกับการใช้งานบนมือถือ*
+
+![หน้าตะกร้าสินค้า](./images/cart.png)
+*ตะกร้าสินค้าใช้งานง่ายพร้อมสรุปรายการสั่งซื้อ*
+
 ## Learn More
 
 To learn more about the technologies used in this project:
