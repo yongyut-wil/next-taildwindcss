@@ -315,7 +315,8 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="drawer-content flex flex-col">
-        <header className="navbar bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg sticky top-0 z-30">
+        {/* Header */}
+        <header className="navbar bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg sticky top-0 z-30 px-2 sm:px-4">
           <div className="flex-none lg:hidden">
             <label
               htmlFor="my-drawer-2"
@@ -325,7 +326,7 @@ export default function Home() {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
-                className="inline-block w-6 h-6 stroke-current"
+                className="inline-block w-5 h-5 stroke-current"
               >
                 <path
                   strokeLinecap="round"
@@ -337,21 +338,28 @@ export default function Home() {
             </label>
           </div>
           <div className="flex-1">
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <FaLeaf className="text-2xl" />
-              Salad Factory
+            <h1 className="text-xl sm:text-2xl font-bold flex items-center gap-2">
+              <FaLeaf className="text-xl sm:text-2xl" />
+              <span className="hidden sm:inline">Salad Factory</span>
+              <span className="sm:hidden">SF</span>
             </h1>
           </div>
-          <div className="flex-none">
+          <div className="flex-none gap-2 sm:gap-4">
+            {/* Order Status */}
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-green-500 bg-opacity-50 rounded-lg text-sm">
+              <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse"></div>
+              <span>Kitchen Open</span>
+            </div>
+            {/* Cart Button */}
             <div className="dropdown dropdown-end">
               <button
-                className="btn btn-ghost btn-circle text-white hover:bg-green-500"
+                className="btn btn-ghost btn-sm sm:btn-md btn-circle text-white hover:bg-green-500 relative"
                 onClick={() => setIsCartOpen(true)}
               >
                 <div className="indicator">
-                  <FaShoppingCart className="h-5 w-5" />
+                  <FaShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
                   {cart.length > 0 && (
-                    <span className="badge badge-sm indicator-item bg-yellow-400 text-black border-none">
+                    <span className="badge badge-xs sm:badge-sm indicator-item bg-yellow-400 text-black border-none">
                       {cart.reduce((total, item) => total + item.quantity, 0)}
                     </span>
                   )}
@@ -361,80 +369,112 @@ export default function Home() {
           </div>
         </header>
 
-        <main className="flex-grow p-6 bg-gray-50">
-          <div className="container mx-auto">
-            <div className="mb-8">
-              <div className="relative max-w-xl mx-auto">
-                <input
-                  type="text"
-                  placeholder="Search for your favorite salad..."
-                  className="input input-bordered w-full pl-10 focus:input-primary bg-green-50 shadow-md text-green-800 placeholder-green-400"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <FaSearch className="absolute left-3 top-3 text-green-500" />
+        <main className="flex-grow p-3 sm:p-6 bg-gray-50">
+          <div className="container mx-auto max-w-7xl">
+            {/* Hero Section */}
+            <div className="mb-8 sm:mb-12 text-center px-4">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 sm:mb-4">Fresh & Healthy Salads</h1>
+              <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto">
+                Discover our handcrafted salads made with fresh, locally-sourced ingredients. 
+                Perfect for a healthy lifestyle.
+              </p>
+            </div>
+
+            {/* Search Bar with Categories */}
+            <div className="mb-8 sm:mb-12 px-4">
+              <div className="max-w-3xl mx-auto space-y-3 sm:space-y-4">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Search for your favorite salad..."
+                    className="input input-bordered w-full pl-10 focus:input-primary bg-white shadow-md text-gray-800 placeholder-gray-400 text-sm sm:text-base h-10 sm:h-12"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <FaSearch className="absolute left-3 top-[50%] -translate-y-[50%] text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+                </div>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  <button className="btn btn-xs sm:btn-sm bg-white hover:bg-green-50 text-gray-700 border-gray-200">
+                    All Salads
+                  </button>
+                  <button className="btn btn-xs sm:btn-sm bg-white hover:bg-green-50 text-gray-700 border-gray-200">
+                    Vegetarian
+                  </button>
+                  <button className="btn btn-xs sm:btn-sm bg-white hover:bg-green-50 text-gray-700 border-gray-200">
+                    Gluten Free
+                  </button>
+                  <button className="btn btn-xs sm:btn-sm bg-white hover:bg-green-50 text-gray-700 border-gray-200">
+                    Popular
+                  </button>
+                </div>
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Salad Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 px-4">
               {filteredSalads.map((salad, index) => (
                 <div
                   key={index}
-                  className="card bg-white shadow-lg hover:shadow-xl transition-all duration-300 border-t-4 border-t-green-500"
+                  className="card bg-white shadow-lg hover:shadow-xl transition-all duration-300 group"
                 >
-                  <figure className="relative">
+                  <figure className="relative overflow-hidden">
                     <img
                       src={salad.image}
                       alt={salad.name}
-                      className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
+                      className="w-full h-48 sm:h-56 lg:h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div className="absolute top-4 right-4 flex gap-2">
+                    <div className="absolute top-2 sm:top-4 right-2 sm:right-4 flex gap-1 sm:gap-2 flex-col sm:flex-row">
                       {salad.dietary.vegetarian && (
-                        <span className="badge bg-green-500 text-white border-none gap-2">
-                          <FaLeaf /> Vegetarian
+                        <span className="badge badge-xs sm:badge-sm bg-green-500 text-white border-none gap-1 sm:gap-2 shadow-lg">
+                          <FaLeaf className="w-3 h-3 sm:w-4 sm:h-4" /> 
+                          <span className="hidden sm:inline">Vegetarian</span>
+                          <span className="sm:hidden">Veg</span>
                         </span>
                       )}
                       {salad.dietary.glutenFree && (
-                        <span className="badge bg-blue-500 text-white border-none gap-2">
-                          <GiWheat /> Gluten Free
+                        <span className="badge badge-xs sm:badge-sm bg-blue-500 text-white border-none gap-1 sm:gap-2 shadow-lg">
+                          <GiWheat className="w-3 h-3 sm:w-4 sm:h-4" /> 
+                          <span className="hidden sm:inline">Gluten Free</span>
+                          <span className="sm:hidden">GF</span>
                         </span>
                       )}
                     </div>
-                  </figure>
-                  <div className="card-body">
-                    <div className="flex justify-between items-start">
-                      <h2 className="card-title text-green-700 font-bold">
-                        {salad.name}
-                      </h2>
-                      <div className="text-xl font-bold text-green-600">
+                    {/* Price Badge */}
+                    <div className="absolute bottom-2 sm:bottom-4 left-2 sm:left-4">
+                      <div className="bg-white px-2 sm:px-3 py-1 rounded-full shadow-lg text-green-600 font-semibold text-sm sm:text-base">
                         ${salad.price}
                       </div>
                     </div>
-                    <p className="text-gray-600">{salad.description}</p>
-                    <div className="flex items-center mt-2">
-                      <div className="rating rating-sm">
-                        {[...Array(5)].map((_, i) => (
-                          <input
-                            key={i}
-                            type="radio"
-                            name={`rating-${index}`}
-                            className="mask mask-star-2 bg-yellow-400"
-                            checked={i + 1 === Math.round(salad.rating)}
-                            readOnly
-                          />
-                        ))}
-                      </div>
-                      <span className="ml-2 text-sm text-gray-500">
-                        ({salad.reviews} reviews)
-                      </span>
+                  </figure>
+                  <div className="card-body p-3 sm:p-6">
+                    <div className="mb-2">
+                      <h2 className="card-title text-base sm:text-lg text-gray-800 mb-1 sm:mb-2">{salad.name}</h2>
+                      <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{salad.description}</p>
                     </div>
-                    <div className="card-actions justify-end mt-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1 sm:gap-2">
+                        <div className="rating rating-xs sm:rating-sm">
+                          {[...Array(5)].map((_, i) => (
+                            <input
+                              key={i}
+                              type="radio"
+                              name={`rating-${index}`}
+                              className="mask mask-star-2 bg-yellow-400"
+                              checked={i + 1 === Math.round(salad.rating)}
+                              readOnly
+                            />
+                          ))}
+                        </div>
+                        <span className="text-xs sm:text-sm text-gray-500">
+                          ({salad.reviews})
+                        </span>
+                      </div>
                       <button
                         onClick={() => addToCart(index)}
-                        className="btn bg-green-600 hover:bg-green-700 text-white border-none gap-2 shadow-md hover:shadow-lg transition-all"
+                        className="btn btn-xs sm:btn-sm bg-green-600 hover:bg-green-700 text-white border-none gap-1 sm:gap-2 shadow-md hover:shadow-lg"
                       >
-                        <MdLocalOffer className="h-5 w-5" />
-                        Add to Cart - ${salad.price}
+                        <MdLocalOffer className="h-3 w-3 sm:h-4 sm:w-4" />
+                        Add
                       </button>
                     </div>
                   </div>
@@ -444,59 +484,67 @@ export default function Home() {
           </div>
         </main>
 
-        <footer className="bg-gray-800 text-white py-8">
-          <div className="container mx-auto px-4">
-            <div className="flex flex-wrap justify-between">
-              <div className="w-full md:w-1/3 mb-6 md:mb-0">
-                <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
+        {/* Footer */}
+        <footer className="bg-gray-800 text-white py-8 sm:py-12">
+          <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+              <div className="max-w-xs">
+                <h3 className="text-lg sm:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-2">
                   <FaLeaf className="text-green-400" />
                   Salad Factory
                 </h3>
-                <p className="text-sm text-gray-300">
-                  Fresh, healthy, delicious salads delivered to you.
+                <p className="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                  Fresh, healthy, and delicious salads delivered to you. Made with locally-sourced ingredients.
                 </p>
               </div>
-              <div className="w-full md:w-1/3 mb-6 md:mb-0">
-                <h3 className="text-xl font-bold mb-2">Quick Links</h3>
-                <ul className="text-sm text-gray-300">
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Quick Links</h3>
+                <ul className="space-y-1 sm:space-y-2 text-gray-400">
                   {menuItems.map((item, index) => (
-                    <li key={index} className="mb-1">
+                    <li key={index}>
                       <a
                         href="#"
-                        className="hover:text-green-400 transition-colors flex items-center gap-2"
+                        className="hover:text-green-400 transition-colors flex items-center gap-2 text-xs sm:text-sm"
                       >
-                        {item.icon}
-                        {item.name}
+                        <span className="w-5 flex-shrink-0">{item.icon}</span>
+                        <span className="truncate">{item.name}</span>
                       </a>
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="w-full md:w-1/3">
-                <h3 className="text-xl font-bold mb-2">Connect With Us</h3>
-                <div className="flex space-x-4">
-                  <a
-                    href="#"
-                    className="text-gray-300 hover:text-green-400 transition-colors"
-                  >
-                    <svg
-                      className="w-6 h-6"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </a>
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Opening Hours</h3>
+                <ul className="space-y-1 sm:space-y-2 text-gray-400 text-xs sm:text-sm">
+                  <li className="flex items-center gap-2">
+                    <span className="whitespace-nowrap">Monday - Friday:</span>
+                    <span className="whitespace-nowrap">10:00 - 22:00</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <span className="whitespace-nowrap">Saturday - Sunday:</span>
+                    <span className="whitespace-nowrap">11:00 - 23:00</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">Newsletter</h3>
+                <p className="text-xs sm:text-sm text-gray-400 mb-3 sm:mb-4">
+                  Subscribe to get special offers and updates.
+                </p>
+                <div className="flex gap-2 max-w-xs">
+                  <input
+                    type="email"
+                    placeholder="Your email"
+                    className="input input-xs sm:input-sm bg-gray-700 border-gray-600 text-white placeholder-gray-400 flex-grow min-w-0"
+                  />
+                  <button className="btn btn-xs sm:btn-sm btn-success whitespace-nowrap">
+                    Subscribe
+                  </button>
                 </div>
               </div>
             </div>
-            <div className="mt-8 border-t border-gray-700 pt-4 text-sm text-center text-gray-400">
-              2024 Salad Factory. All rights reserved.
+            <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-700 text-center text-gray-400 text-xs sm:text-sm">
+              <p> 2024 Salad Factory. All rights reserved.</p>
             </div>
           </div>
         </footer>
