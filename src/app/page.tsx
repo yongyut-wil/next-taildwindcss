@@ -25,6 +25,7 @@ export default function Home() {
   const [filterGlutenFree, setFilterGlutenFree] = useState(false);
   const [sortBy, setSortBy] = useState<"price" | "rating" | "name">("name");
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [maxPrice, setMaxPrice] = useState<number | null>(null);
 
   const salads: Salad[] = [
     {
@@ -155,7 +156,8 @@ export default function Home() {
         (salad.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
           salad.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
         (!filterVegetarian || salad.dietary.vegetarian) &&
-        (!filterGlutenFree || salad.dietary.glutenFree)
+        (!filterGlutenFree || salad.dietary.glutenFree) &&
+        (!maxPrice || salad.price <= maxPrice)
     )
     .sort((a, b) => {
       switch (sortBy) {
@@ -183,14 +185,26 @@ export default function Home() {
       {/* Drawer Sidebar */}
       <div className="drawer-side z-40">
         <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-        <aside className="menu p-4 w-80 min-h-full bg-base-200 text-base-content border-r border-base-300">
+        <aside className="menu p-4 w-80 min-h-full bg-white text-base-content border-r border-gray-100 shadow-lg">
+          {/* User Profile Section */}
+          <div className="mb-8 text-center">
+            <div className="avatar placeholder mb-4">
+              <div className="bg-green-100 text-green-600 rounded-full w-20 h-20 mx-auto">
+                <span className="text-3xl">SF</span>
+              </div>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-800">Welcome to</h3>
+            <h2 className="text-xl font-bold text-green-600">Salad Factory</h2>
+          </div>
+
+          {/* Main Navigation */}
           <div className="mb-8">
-            <h2 className="text-xl font-bold text-primary mb-4">Menu</h2>
+            <h2 className="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wider">Main Menu</h2>
             <ul className="space-y-2">
               {menuItems.map((item, index) => (
                 <li key={index}>
-                  <a className="flex items-center gap-3 p-3 hover:bg-base-300 rounded-lg transition-colors">
-                    {item.icon}
+                  <a className="flex items-center gap-3 p-3 hover:bg-green-50 rounded-lg transition-all duration-200 text-gray-700 hover:text-green-600 active:bg-green-100">
+                    <span className="w-5 h-5 flex items-center justify-center">{item.icon}</span>
                     <span>{item.name}</span>
                   </a>
                 </li>
@@ -198,12 +212,10 @@ export default function Home() {
             </ul>
           </div>
 
+          {/* Dietary Preferences */}
           <div className="mb-8">
-            <h2 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
-              <FaFilter />
-              Filters
-            </h2>
-            <div className="space-y-4">
+            <h2 className="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wider">Dietary Preferences</h2>
+            <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
               <div className="form-control">
                 <label className="cursor-pointer label justify-start gap-3">
                   <input
@@ -212,8 +224,8 @@ export default function Home() {
                     onChange={(e) => setFilterVegetarian(e.target.checked)}
                     className="checkbox checkbox-success"
                   />
-                  <span className="label-text flex items-center gap-2">
-                    <FaLeaf className="text-success" />
+                  <span className="label-text flex items-center gap-2 text-gray-700">
+                    <FaLeaf className="text-green-500" />
                     Vegetarian
                   </span>
                 </label>
@@ -226,8 +238,8 @@ export default function Home() {
                     onChange={(e) => setFilterGlutenFree(e.target.checked)}
                     className="checkbox checkbox-primary"
                   />
-                  <span className="label-text flex items-center gap-2">
-                    <GiWheat className="text-primary" />
+                  <span className="label-text flex items-center gap-2 text-gray-700">
+                    <GiWheat className="text-blue-500" />
                     Gluten Free
                   </span>
                 </label>
@@ -235,20 +247,69 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Price Range Slider */}
           <div className="mb-8">
-            <h2 className="text-xl font-bold text-primary mb-4">Sort By</h2>
+            <h2 className="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wider">Price Range</h2>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <input
+                type="range"
+                min={0}
+                max={20}
+                value={maxPrice || 20}
+                onChange={(e) => setMaxPrice(Number(e.target.value))}
+                className="range range-success"
+                step={1}
+              />
+              <div className="flex justify-between text-xs text-gray-500 mt-2">
+                <span>$0</span>
+                <span>Max: ${maxPrice || 20}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Sorting Options */}
+          <div className="mb-8">
+            <h2 className="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wider">Sort By</h2>
             <select
-              className="select select-bordered w-full hover:select-primary focus:select-primary"
+              className="select select-bordered w-full bg-gray-50 text-gray-700 hover:border-green-500 focus:border-green-500"
               value={sortBy}
-              onChange={(e) =>
-                setSortBy(e.target.value as "price" | "rating" | "name")
-              }
+              onChange={(e) => setSortBy(e.target.value as "price" | "rating" | "name")}
             >
-              <option value="name">Name</option>
+              <option value="name">Name: A to Z</option>
               <option value="price">Price: Low to High</option>
               <option value="rating">Rating: High to Low</option>
             </select>
           </div>
+
+          {/* Daily Special */}
+          <div className="mb-8">
+            <h2 className="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wider">Today's Special</h2>
+            <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-12 h-12 rounded-full bg-white p-2 flex items-center justify-center">
+                  <MdLocalOffer className="text-2xl text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-green-700">20% OFF</h3>
+                  <p className="text-sm text-green-600">On all Greek Salads</p>
+                </div>
+              </div>
+              <button className="btn btn-sm bg-white text-green-600 hover:bg-green-50 border-green-200 w-full">
+                View Offer
+              </button>
+            </div>
+          </div>
+
+          {/* Health Tips */}
+          <div className="mb-8">
+            <h2 className="text-sm font-semibold text-gray-500 mb-4 uppercase tracking-wider">Health Tip of the Day</h2>
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
+              <p className="text-sm text-blue-700 italic">
+                "Adding colorful vegetables to your salad increases its antioxidant properties and nutritional value."
+              </p>
+            </div>
+          </div>
+
         </aside>
       </div>
 
